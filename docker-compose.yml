@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./Financial-Home-Backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Cambia 3000 por el puerto real de tu backend si es distinto
+    volumes:
+      - ./Financial-Home-Backend:/app
+      - /app/node_modules # Si usas Node, esto protege tus dependencias internas
+    networks:
+      - financial-net
+
+  frontend:
+    build:
+      context: ./Financial-Home
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173" # Cambia 5173 por el puerto real de tu frontend (ej. 5173 para Vite, 8080, etc.)
+    volumes:
+      - ./Financial-Home:/app
+      - /app/node_modules
+    networks:
+      - financial-net
+    depends_on:
+      - backend
+
+networks:
+  financial-net:
+    driver: bridge

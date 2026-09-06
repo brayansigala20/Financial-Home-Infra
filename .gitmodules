@@ -1,0 +1,6 @@
+[submodule "Financial-Home"]
+	path = Financial-Home
+	url = https://github.com/brayansigala20/Financial-Home.git
+[submodule "Financial-Home-Backend"]
+	path = Financial-Home-Backend
+	url = https://github.com/brayansigala20/Financial-Home-Backend.git

@@ -1,24 +1,50 @@
-version: '3.8'
-
 services:
+  db:
+    image: postgres:15-alpine
+    container_name: financial_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_DB: financial_home_db
+    ports:
+      - "5432:5432"
+    volumes:
+      # Persistencia en tu disco secundario de 500GB
+      - /mnt/data/postgres_data:/var/lib/postgresql/data
+    networks:
+      - financial-net
+
   backend:
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     build:
       context: ./Financial-Home-Backend
       dockerfile: Dockerfile
+    container_name: financial_backend
+    restart: always
     ports:
-      - "3000:3000" # Cambia 3000 por el puerto real de tu backend si es distinto
+      - "3000:3000"
+    environment:
+      # URL de conexión apuntando al servicio 'db' dentro de Docker
+      DATABASE_URL: "postgresql://postgres:secretpassword@db:5432/financial_home_db?schema=public"
     volumes:
       - ./Financial-Home-Backend:/app
-      - /app/node_modules # Si usas Node, esto protege tus dependencias internas
+      - /app/node_modules
     networks:
       - financial-net
+    depends_on:
+      - db
 
   frontend:
     build:
       context: ./Financial-Home
       dockerfile: Dockerfile
+    container_name: financial_frontend
+    restart: always
     ports:
-      - "5173:5173" # Cambia 5173 por el puerto real de tu frontend (ej. 5173 para Vite, 8080, etc.)
+      - "5173:5173"
     volumes:
       - ./Financial-Home:/app
       - /app/node_modules

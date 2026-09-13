@@ -12,3 +12,4 @@ Thumbs.db
 # Contenedores / Datos de Docker persistentes
 postgres_data/
 mysql_data/
+docker-compose.override.yml

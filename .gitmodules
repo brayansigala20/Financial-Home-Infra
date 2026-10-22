@@ -4,3 +4,6 @@
 [submodule "Financial-Home-Backend"]
 	path = Financial-Home-Backend
 	url = https://github.com/brayansigala20/Financial-Home-Backend.git
+[submodule "Financial-Home-Backend-Java"]
+	path = Financial-Home-Backend-Java
+	url = https://github.com/brayansigala20/Financial-Home-Backend-Java.git

@@ -1,3 +1,4 @@
+
 services:
   db:
     image: postgres:15-alpine
@@ -10,7 +11,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      # Persistencia en tu disco secundario de 500GB
+      # Persistencia en el disco secundario de 500 GB
       - /mnt/data/postgres_data:/var/lib/postgresql/data
     networks:
       - financial-net
@@ -27,11 +28,27 @@ services:
     ports:
       - "3000:3000"
     environment:
-      # URL de conexión apuntando al servicio 'db' dentro de Docker
       DATABASE_URL: "postgresql://postgres:secretpassword@db:5432/financial_home_db?schema=public"
     volumes:
       - ./Financial-Home-Backend:/app
       - /app/node_modules
+    networks:
+      - financial-net
+    depends_on:
+      - db
+
+  backend-java:
+    build:
+      context: ./Financial-Home-Backend-Java
+      dockerfile: Dockerfile
+    container_name: financial_backend_java
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: "jdbc:postgresql://db:5432/financial_home_db"
+      DB_USERNAME: postgres
+      DB_PASSWORD: secretpassword
     networks:
       - financial-net
     depends_on:
